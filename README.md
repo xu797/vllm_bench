@@ -1,4 +1,4 @@
-# 🚀 vLLM Serving Benchmark Report: Qwen2.5-7B-Instruct
+# 🚀 vLLM Serving Benchmark Report: Qwen2.5-7B
 
 本项目记录了使用 `vllm bench serve` 对 **Qwen2.5-7B-Instruct** 模型进行压力测试的结果。旨在评估该模型在单机/单卡 vLLM 部署下的吞吐量上限、延迟表现及并发瓶颈。
 
