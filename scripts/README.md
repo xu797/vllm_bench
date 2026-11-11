@@ -54,3 +54,21 @@ vllm bench serve --backend vllm --model Qwen/Qwen2.5-7B-Instruct \
 vllm bench serve --backend vllm --model Qwen/Qwen2.5-7B-Instruct \
     --num-prompts 200 --request-rate 20 \
     --save-result --result-filename rate20.json
+
+vllm bench serve --backend vllm --model Qwen/Qwen2.5-7B-Instruct \
+    --num-prompts 300 --request-rate 30 \
+    --save-result --result-filename rate30.json
+
+vllm bench serve --backend vllm --model Qwen/Qwen2.5-7B-Instruct \
+    --num-prompts 300 --request-rate 50 \
+    --save-result --result-filename rate50.json
+
+Qwen/Qwen2.5-7B-Instruct-AWQ
+
+
+vllm serve Qwen/Qwen2.5-7B-Instruct-AWQ \
+  --host 0.0.0.0 \
+  --port 8000 \
+  --gpu-memory-utilization 0.90 \
+  --max-model-len 4096 \
+  --max-num-seqs 64

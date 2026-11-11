@@ -4,9 +4,9 @@
 
 ## 🖥️ 实验环境 (Test Environment)
 
-*   **模型 (Model):** Qwen/Qwen2.5-7B-Instruct
+*   **模型 (Model):** Qwen/Qwen2.5-7B-Instruct (FP16)
 *   **推理框架 (Framework):** vLLM (version 0.33.0)
-*   **GPU:** *[NVIDIA RTX 3090 24GB]*
+*   **GPU:** NVIDIA RTX 3090 24GB
 *   **CUDA Version:** 12.8
 *   **PyTorch Version:** 2.14.0+cu130
 *   **测试工具:** `vllm bench serve` (默认输入长度 1024，输出长度 128)
@@ -23,7 +23,7 @@ vllm serve Qwen/Qwen2.5-7B-Instruct \
 
 ## 📊 压测数据汇总 (Benchmark Results)
 
-我们使用了不同的请求速率 (Request Rate) 进行了 4 组测试，所有测试均为 **0 失败 (Failed requests: 0)**，服务表现出极高的稳定性。
+我们使用了不同的请求速率 (Request Rate) 进行了 **6 组** 测试，所有测试均为 **0 失败 (Failed requests: 0)**，服务表现出极高的稳定性。
 
 ![vLLM Benchmark on RTX 3090](./bench/vllm_benchmark_rtx3090.png)
 
@@ -34,7 +34,9 @@ vllm serve Qwen/Qwen2.5-7B-Instruct \
 | **Rate 1** | 1.00 | 20 | 0.88 | 112.72 | 7 | **327.16 ms** | **23.35 ms** |
 | **Rate 5** | 5.00 | 50 | 3.49 | 446.24 | 37 | **587.16 ms** | **40.67 ms** |
 | **Rate 10** | 10.00 | 100 | 4.82 | 617.38 | 79 | **1815.21 ms** | **64.53 ms** |
-| **Rate 20** | 20.00 | 200 | 5.45 | 697.15 | 155 | **6824.76 ms** | **82.02 ms** |
+| **Rate 20** | 20.00 | 200 | 5.45 | **697.15** | 155 | **6824.76 ms** | **82.02 ms** |
+| **Rate 30** | 30.00 | 300 | 3.95 | **505.96** | 300 | **31109.60 ms** | **108.37 ms** |
+| **Rate 50** | 50.00 | 300 | 3.91 | **500.51** | 300 | **33461.78 ms** | **109.66 ms** |
 
 ### 2. 延迟分位数详情 (Latency Percentiles)
 
@@ -44,6 +46,8 @@ vllm serve Qwen/Qwen2.5-7B-Instruct \
 | **Rate 5** | 1622.57 ms | 66.58 ms | 40.67 ms |
 | **Rate 10** | 7628.66 ms | 105.54 ms | 64.53 ms |
 | **Rate 20** | 23193.78 ms | 135.07 ms | 82.02 ms |
+| **Rate 30** | 62701.83 ms | 123.72 ms | 108.37 ms |
+| **Rate 50** | 67581.16 ms | 124.19 ms | 109.66 ms |
 
 > *注：TTFT = Time to First Token (首字延迟), TPOT = Time per Output Token (单字生成延迟), ITL = Inter-token Latency (Token间延迟)*
 
@@ -64,3 +68,11 @@ vllm serve Qwen/Qwen2.5-7B-Instruct \
 
 *   服务启动时限制了 `--max-num-seqs 64`。但在 Rate 20 的测试中，**峰值并发数达到了 155**。
 *   这说明请求的到达速度（20 req/s）远超 GPU 的处理速度。多出来的请求堆积在 API 层的等待队列中，导致系统整体的排队延迟远大于计算延迟。
+
+### 4. 极限施压下的“性能撞墙”与雪崩效应
+
+当测试继续加压至 **30 RPS** 和 **50 RPS** 时，系统出现了极其明显的“性能撞墙”与雪崩现象：
+
+*   **吞吐量断崖式下跌**：系统的输出吞吐量并未随着并发增加而上升，反而从 20 RPS 时的巅峰 `697 tok/s` 暴跌并停滞在 `500 tok/s` 左右。此时“加量不加价”，反而出现了负优化。
+*   **延迟彻底失控**：平均首字延迟（TTFT）从 6.8 秒直接飙升至 **31 ~ 33 秒**，P99 延迟更是达到了夸张的 **60 ~ 67 秒**，服务实质上已处于不可用状态。
+*   **根因分析**：由于 FP16 模型权重已占用大量显存，加上 `--max-num-seqs 64` 的限制，在如此高并发下，大量请求堆积在 Uvicorn API 层（客户端记录峰值并发达到 300）。GPU 内部的 KV Cache 满载导致 vLLM 引擎频繁触发 **抢占（Preemption）**，大量请求被踢出显存又重新计算，产生了巨大的额外开销（Overhead），最终导致系统吞吐量雪崩。
