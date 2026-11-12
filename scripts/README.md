@@ -72,3 +72,22 @@ vllm serve Qwen/Qwen2.5-7B-Instruct-AWQ \
   --gpu-memory-utilization 0.90 \
   --max-model-len 4096 \
   --max-num-seqs 64
+
+# 1. AWQ - 10 RPS
+vllm bench serve --backend vllm --model Qwen/Qwen2.5-7B-Instruct-AWQ \
+    --num-prompts 100 --request-rate 10 \
+    --save-result --result-filename awq_rate10.json
+
+# 2. AWQ - 20 RPS
+vllm bench serve --backend vllm --model Qwen/Qwen2.5-7B-Instruct-AWQ \
+    --num-prompts 200 --request-rate 20 \
+    --save-result --result-filename awq_rate20.json
+
+# 3. AWQ - 30 RPS
+vllm bench serve --backend vllm --model Qwen/Qwen2.5-7B-Instruct-AWQ \
+    --num-prompts 300 --request-rate 30 \
+    --save-result --result-filename awq_rate30.json
+
+vllm bench serve --backend vllm --model Qwen/Qwen2.5-7B-Instruct-AWQ \
+    --num-prompts 300 --request-rate 50 \
+    --save-result --result-filename awq_rate50.json
