@@ -6,7 +6,8 @@
 
 ![FP16 与 AWQ 的吞吐、延迟、请求形状和显存对比](results/study_20261118/overview.png)
 
-图表由逐轮测量结果生成；速率曲线的误差线表示重复轮次的最小值至最大值。可查看 [PNG](results/study_20261118/overview.png)、[PDF](results/study_20261118/overview.pdf) 或 [完整汇总表](results/study_20261118/SUMMARY.md)。
+图表由逐轮测量结果生成；速率曲线的误差线表示重复轮次的最小值至最大值。
+
 
 ## 主要结果
 
