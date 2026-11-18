@@ -1,0 +1,38 @@
+{
+  "argv": [
+    "/home/eric/xujixian/work/vllm_bench/vllm-lab/bin/vllm",
+    "serve",
+    "/home/eric/.cache/huggingface/hub/models--Qwen--Qwen2.5-7B-Instruct/snapshots/a09a35458c702b33eeacc393d103063234e8bc28",
+    "--served-model-name",
+    "study-model",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8100",
+    "--dtype",
+    "half",
+    "--gpu-memory-utilization",
+    "0.90",
+    "--max-model-len",
+    "4096",
+    "--max-num-seqs",
+    "64",
+    "--max-num-batched-tokens",
+    "2048",
+    "--enable-chunked-prefill",
+    "--no-enable-prefix-caching",
+    "--seed",
+    "0",
+    "--generation-config",
+    "vllm"
+  ],
+  "env": {
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": "1",
+    "CUDA_VISIBLE_DEVICES": "0",
+    "VLLM_USE_FLASHINFER_SAMPLER": "0",
+    "VLLM_LOG_STATS_INTERVAL": "2",
+    "TOKENIZERS_PARALLELISM": "false",
+    "CUDA_HOME": "/usr/local/cuda-12.8"
+  }
+}

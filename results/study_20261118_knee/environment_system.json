@@ -1,0 +1,9 @@
+{
+  "command": [
+    "uname",
+    "-a"
+  ],
+  "returncode": 0,
+  "stdout": "Linux eric-MS-7C91 6.8.0-149-generic #149~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Oct 28 20:58:45 UTC  x86_64 x86_64 x86_64 GNU/Linux\n",
+  "stderr": ""
+}

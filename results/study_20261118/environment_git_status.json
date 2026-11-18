@@ -1,0 +1,10 @@
+{
+  "command": [
+    "git",
+    "status",
+    "--short"
+  ],
+  "returncode": 0,
+  "stdout": " D bench/client.py\n D bench/load_test.py\n?? results/study_20261118/\n?? scripts/run_study.py\n",
+  "stderr": ""
+}
