@@ -58,7 +58,6 @@
 
 ## 复现
 
-需要 Linux、可用的 NVIDIA GPU/驱动、Python 3.11、uv，以及 Hugging Face 缓存中的两个模型。运行器默认从 ~/.cache/huggingface/hub 读取固定 revision，并在离线模式下启动：
 
     uv venv vllm-lab --python 3.11
     uv pip install --python vllm-lab/bin/python "vllm==0.33.0" matplotlib numpy
