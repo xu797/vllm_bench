@@ -2,7 +2,7 @@
 
 **Qwen2.5-7B-Instruct FP16 vs AWQ on a single RTX 3090**
 
-一个面向推理服务评估的可复现实验：使用 vLLM 提供 OpenAI-compatible API，以固定 token 长度的合成请求比较 FP16 与 AWQ，并记录吞吐、尾延迟、SLO goodput、GPU/KV Cache 状态及请求错误。
+使用 vLLM 提供 OpenAI-compatible API，以固定 token 长度的合成请求比较 FP16 与 AWQ，并记录吞吐、尾延迟、SLO goodput、GPU/KV Cache 状态及请求错误。
 
 ![FP16 与 AWQ 的吞吐、延迟、请求形状和显存对比](results/study_20261118/overview.png)
 
@@ -34,7 +34,7 @@
 | 可用 KV Cache 显存 | 6.43 GiB | 15.37 GiB |
 | KV Cache token 容量 | 120,464 | 287,808 |
 
-全部实验共完成 64 组、发送 10,816 个请求，其中 44 个请求返回 Bad Gateway（FP16 34 个、AWQ 10 个）。错误均保留在数据中；本次实验没有定位其来源。监控记录的 num_preemptions_total 增量为 0，因此不将观测到的吞吐平台归因于 KV Cache 抢占。
+全部实验共完成 64 组、发送 10,816 个请求，其中 44 个请求返回 Bad Gateway（FP16 34 个、AWQ 10 个）。错误均保留在数据中；本次实验没有定位其来源。
 
 ## 实验方法
 
