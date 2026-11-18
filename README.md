@@ -86,7 +86,6 @@
       --results-root results/reproduction \
       --output results/reproduction/summary/overview.png
 
-运行时间取决于 GPU 和模型启动/编译时间。运行器会拒绝覆盖已有 --output 目录；用不同路径保存新实验。绘图脚本会从实验目录下的服务日志读取显存数据。
 
 ## 工具脚本
 
